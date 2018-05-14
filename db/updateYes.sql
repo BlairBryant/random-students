@@ -1,5 +1,3 @@
 UPDATE students
-set yes = $2
-where id = $1;
-
-U
+SET yes = $2
+WHERE id = $1;

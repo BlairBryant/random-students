@@ -44,7 +44,9 @@ class App extends Component {
       return array;
     }
     this.today = shuffle(this.today);
+    console.log(this.today)
     const {today} = this
+    console.log(today)
     let pairs = []
     let updatedYesArrays = []
 
@@ -75,16 +77,19 @@ class App extends Component {
         }
       }
     }
-    // console.log('pairs', pairs)
     console.log(updatedYesArrays)
     this.setState({pairs})
-    axios.put('/api/updateyes', {students: updatedYesArrays})
+    for(let i = 0; i < updatedYesArrays.length; i++) {
+      axios.put('/api/updateyes', {student: updatedYesArrays[i]})
+    }
   }
 
   render() {
-    // console.log(this.state.today)
     let mappedStudents = this.state.today.map(x => {
       return <p>{x.name}</p>
+    })
+    let mappedPairs = this.state.pairs.map(x => {
+      return <p>{`${x[0]} / ${x[1]}`}</p>
     })
     return (
       <div className="App">
@@ -101,7 +106,7 @@ class App extends Component {
             {mappedStudents}
           </div>
           <div>
-            {this.state.pairs}
+            {mappedPairs}
           </div>
         </section>
       </div>
