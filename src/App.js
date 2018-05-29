@@ -31,6 +31,7 @@ class App extends Component {
 
   getPairs() {
     this.today = [...this.state.today]
+    console.log(this.today)
 
     function shuffle(array) {
       var currentIndex = array.length, temporaryValue, randomIndex;
@@ -43,72 +44,74 @@ class App extends Component {
       }
       return array;
     }
-    this.today = shuffle(this.today);
-    console.log(this.today)
-    const {today} = this
-    console.log(today)
+    shuffle(this.state.today);
     let pairs = []
     let updatedYesArrays = []
 
-    for (let i = 0; i < today.length; i++) {
-      for (let j = i+1; j < today.length; j++) {
-        if(today[i].yes.indexOf(today[j].id) === -1) {
-          today[i].yes.push(today[j].id)
-          today[j].yes.push(today[i].id)
-          updatedYesArrays.push(today[i], today[j])
-          pairs.push([today[i].name, today[j].name])
-          today.splice(i, 1)
-          today.splice(j-1, 1)
+    for (let i = 0; i < this.state.today.length; i++) {
+      for (let j = i + 1; j < this.state.today.length; j++) {
+        if (this.state.today[i].yes.indexOf(this.state.today[j].id) === -1) {
+          this.state.today[i].yes.push(this.state.today[j].id)
+          this.state.today[j].yes.push(this.state.today[i].id)
+          updatedYesArrays.push(this.state.today[i], this.state.today[j])
+          pairs.push([this.state.today[i].name, this.state.today[j].name])
+          this.state.today.splice(i, 1)
+          this.state.today.splice(j - 1, 1)
           i--
           break;
         }
       }
     }
-    if(today.length !== 0) {
-      for(let i = 0; i < today.length; i++) {
-        if(today.length % 2 === 0) {
-          pairs.push([today[i].name, today[i+1].name])
-          updatedYesArrays.push(today[i], today[i+1])
-          today.splice(i, 2)
+    if (this.state.today.length !== 0) {
+      for (let i = 0; i < this.state.today.length; i++) {
+        if (this.state.today.length % 2 === 0) {
+          pairs.push([this.state.today[i].name, this.state.today[i + 1].name])
+          updatedYesArrays.push(this.state.today[i], this.state.today[i + 1])
+          this.state.today.splice(i, 2)
           i--
         } else {
-          today.push({id: 1337, name: 'Mentors'})
+          this.state.today.push({ id: 1337, name: 'Mentors' })
           i--
         }
       }
     }
     console.log(updatedYesArrays)
-    this.setState({pairs})
-    for(let i = 0; i < updatedYesArrays.length; i++) {
-      axios.put('/api/updateyes', {student: updatedYesArrays[i]})
-    }
+    this.setState({ pairs })
+    axios.put('/api/updateyes', { student: updatedYesArrays }) 
   }
 
+
   render() {
+    console.log(this.state)
     let mappedStudents = this.state.today.map(x => {
-      return <p>{x.name}</p>
+      return <p key={x.id + 'Hey there'} className='center studentsToday'>{x.name}</p>
     })
     let mappedPairs = this.state.pairs.map(x => {
-      return <p>{`${x[0]} / ${x[1]}`}</p>
+      return <p key={x[0] + 'tacos'} className='center studentsToday'>{`${x[0]} / ${x[1]}`}</p>
     })
     return (
-      <div className="App">
-        <input placeholder='Add student to db' onChange={e => this.setState({ addInput: e.target.value })} />
-        <button onClick={() => this.postStudent(this.state.addInput)}>Add</button>
-        <br /><br />
-        <input placeholder='Remove student from db' onChange={e => this.setState({ removeInput: e.target.value })} />
-        <button onClick={() => this.removeStudent(this.state.removeInput)}>Remove</button>
-        <br /><br />
-        <button onClick={() => this.getStudents()}>Get Students</button>
-        <button onClick={() => this.getPairs()}>Get Pairs</button>
-        <section className='row'>
-          <div>
-            {mappedStudents}
-          </div>
-          <div>
-            {mappedPairs}
-          </div>
-        </section>
+      <div className="pairRandomizer">
+        <header>
+
+        </header>
+        <div className='randomizerBody'>
+          <input placeholder='Add student to db' onChange={e => this.setState({ addInput: e.target.value })} />
+          <button onClick={() => this.postStudent(this.state.addInput)}>Add</button>
+          <br /><br />
+          <input placeholder='Remove student from db' onChange={e => this.setState({ removeInput: e.target.value })} />
+          <button onClick={() => this.removeStudent(this.state.removeInput)}>Remove</button>
+          <br /><br />
+          <button onClick={() => this.getStudents()}>Get Students</button>
+          <button onClick={() => this.getPairs()}>Get Pairs</button>
+          <section className='row'>
+            <div className='todaysStudents'>
+              {mappedStudents}
+            </div>
+            <div className='todaysStudents'>
+              {mappedPairs}
+            </div>
+          </section>
+        </div>
       </div>
     );
   }

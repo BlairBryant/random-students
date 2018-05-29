@@ -17,6 +17,9 @@ module.exports = {
     updateYes: (req, res) => {
         const db = req.app.get('db')
         const {student} = req.body
-        db.updateYes([student.id, student.yes])
+        for ( let i = 0; i < student.length; i++) {
+            console.log(student)
+            db.updateYes([student[i].id, student[i].yes])
+        }
     },
 }

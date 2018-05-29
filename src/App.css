@@ -1,7 +1,50 @@
-.App {
-  text-align: center;
+.pairRandomizer {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.pairRandomizer header {
+  width: 100%;
+  height: 10vh;
+  background: #444;
 }
 
 .row {
   display: flex;
 }
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.randomizerBody {
+  width: 100%;
+  height: 90vh;
+  padding-top: 50px;
+  box-sizing: border-box;
+  background: #536b74;
+}
+
+.randomizerBody section {
+  justify-content: space-around;
+}
+
+.todaysStudents {
+  width: 40%;
+  height: 60vh;
+  overflow: auto;
+  background: white;
+}
+
+.studentsToday {
+  margin: 0;
+  height: 30px;
+  background: gray;
+}
+
+.studentsToday:nth-child(even) {
+  background: white;
+}
+
