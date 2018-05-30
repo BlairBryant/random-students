@@ -12,7 +12,6 @@ class App extends Component {
       removeInput: '',
       pairs: []
     }
-    this.today = []
   }
 
   postStudent(name) {
@@ -29,9 +28,20 @@ class App extends Component {
     })
   }
 
+  removeStudentToday(id) {
+    let copy = this.state.today.slice()
+    for(let i = 0; i < copy.length; i++) {
+      if(copy[i].id === id) {
+        copy.splice(i, 1)
+        break;
+      }
+    }
+    this.setState({today: copy})
+  }
+
   getPairs() {
-    this.today = [...this.state.today]
-    console.log(this.today)
+    let today = [...this.state.today]
+    console.log(today)
 
     function shuffle(array) {
       var currentIndex = array.length, temporaryValue, randomIndex;
@@ -42,49 +52,100 @@ class App extends Component {
         array[currentIndex] = array[randomIndex];
         array[randomIndex] = temporaryValue;
       }
-      return array;
+      return array
     }
-    shuffle(this.state.today);
+    shuffle(today)
     let pairs = []
     let updatedYesArrays = []
 
-    for (let i = 0; i < this.state.today.length; i++) {
-      for (let j = i + 1; j < this.state.today.length; j++) {
-        if (this.state.today[i].yes.indexOf(this.state.today[j].id) === -1) {
-          this.state.today[i].yes.push(this.state.today[j].id)
-          this.state.today[j].yes.push(this.state.today[i].id)
-          updatedYesArrays.push(this.state.today[i], this.state.today[j])
-          pairs.push([this.state.today[i].name, this.state.today[j].name])
-          this.state.today.splice(i, 1)
-          this.state.today.splice(j - 1, 1)
+    for (let i = 0; i < today.length; i++) {
+      for (let j = i + 1; j < today.length; j++) {
+        if (today[i].yes.indexOf(today[j].id) === -1) {
+          today[i].yes.push(today[j].id)
+          today[j].yes.push(today[i].id)
+          updatedYesArrays.push(today[i], today[j])
+          pairs.push([today[i].name, today[j].name])
+          today.splice(i, 1)
+          today.splice(j - 1, 1)
           i--
           break;
         }
       }
     }
-    if (this.state.today.length !== 0) {
-      for (let i = 0; i < this.state.today.length; i++) {
-        if (this.state.today.length % 2 === 0) {
-          pairs.push([this.state.today[i].name, this.state.today[i + 1].name])
-          updatedYesArrays.push(this.state.today[i], this.state.today[i + 1])
-          this.state.today.splice(i, 2)
+    if (today.length !== 0) {
+      for (let i = 0; i < today.length; i++) {
+        if (today.length % 2 === 0) {
+          pairs.push([today[i].name, today[i + 1].name])
+          updatedYesArrays.push(today[i], today[i + 1])
+          today.splice(i, 2)
           i--
         } else {
-          this.state.today.push({ id: 1337, name: 'Mentors' })
+          today.push({ id: 1337, name: 'Mentors' })
           i--
         }
       }
     }
     console.log(updatedYesArrays)
     this.setState({ pairs })
-    axios.put('/api/updateyes', { student: updatedYesArrays }) 
+    // axios.put('/api/updateyes', { student: updatedYesArrays })
   }
+  // getPairs() {
+  //   let today = [...this.state.today]
+
+  //   function shuffle(array) {
+  //     var currentIndex = array.length, temporaryValue, randomIndex;
+  //     while (0 !== currentIndex) {
+  //       randomIndex = Math.floor(Math.random() * currentIndex);
+  //       currentIndex -= 1;
+  //       temporaryValue = array[currentIndex];
+  //       array[currentIndex] = array[randomIndex];
+  //       array[randomIndex] = temporaryValue;
+  //     }
+  //     return array;
+  //   }
+  //   shuffle(this.state.today);
+  //   let pairs = []
+  //   let updatedYesArrays = []
+
+  //   for (let i = 0; i < this.state.today.length; i++) {
+  //     for (let j = i + 1; j < this.state.today.length; j++) {
+  //       if (this.state.today[i].yes.indexOf(this.state.today[j].id) === -1) {
+  //         this.state.today[i].yes.push(this.state.today[j].id)
+  //         this.state.today[j].yes.push(this.state.today[i].id)
+  //         updatedYesArrays.push(this.state.today[i], this.state.today[j])
+  //         pairs.push([this.state.today[i].name, this.state.today[j].name])
+  //         this.state.today.splice(i, 1)
+  //         this.state.today.splice(j - 1, 1)
+  //         i--
+  //         break;
+  //       }
+  //     }
+  //   }
+  //   if (this.state.today.length !== 0) {
+  //     for (let i = 0; i < this.state.today.length; i++) {
+  //       if (this.state.today.length % 2 === 0) {
+  //         pairs.push([this.state.today[i].name, this.state.today[i + 1].name])
+  //         updatedYesArrays.push(this.state.today[i], this.state.today[i + 1])
+  //         this.state.today.splice(i, 2)
+  //         i--
+  //       } else {
+  //         this.state.today.push({ id: 1337, name: 'Mentors' })
+  //         i--
+  //       }
+  //     }
+  //   }
+  //   console.log(updatedYesArrays)
+  //   this.setState({ pairs })
+  //   axios.put('/api/updateyes', { student: updatedYesArrays })
+  // }
 
 
   render() {
-    console.log(this.state)
     let mappedStudents = this.state.today.map(x => {
-      return <p key={x.id + 'Hey there'} className='center studentsToday'>{x.name}</p>
+      return <div key={x.id + 'Hey there'} className='center studentsToday'>
+        <p className='center'>{x.name}</p>
+        <h5 onClick={() => this.removeStudentToday(x.id)} className='removeStudent'>X</h5>
+      </div>
     })
     let mappedPairs = this.state.pairs.map(x => {
       return <p key={x[0] + 'tacos'} className='center studentsToday'>{`${x[0]} / ${x[1]}`}</p>
