@@ -164,7 +164,7 @@ class App extends Component {
           <br /><br />
           <button onClick={() => this.getStudents()}>Get Students</button>
           <button onClick={() => this.getPairs()}>Get Pairs</button>
-          <section className='row'>
+          <section className='row blocks'>
             <div className='todaysStudents'>
               {mappedStudents}
             </div>
