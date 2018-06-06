@@ -87,59 +87,9 @@ class App extends Component {
     }
     console.log(updatedYesArrays)
     this.setState({ pairs })
-    // axios.put('/api/updateyes', { student: updatedYesArrays })
+    axios.put('/api/updateyes', { student: updatedYesArrays })
   }
-  // getPairs() {
-  //   let today = [...this.state.today]
-
-  //   function shuffle(array) {
-  //     var currentIndex = array.length, temporaryValue, randomIndex;
-  //     while (0 !== currentIndex) {
-  //       randomIndex = Math.floor(Math.random() * currentIndex);
-  //       currentIndex -= 1;
-  //       temporaryValue = array[currentIndex];
-  //       array[currentIndex] = array[randomIndex];
-  //       array[randomIndex] = temporaryValue;
-  //     }
-  //     return array;
-  //   }
-  //   shuffle(this.state.today);
-  //   let pairs = []
-  //   let updatedYesArrays = []
-
-  //   for (let i = 0; i < this.state.today.length; i++) {
-  //     for (let j = i + 1; j < this.state.today.length; j++) {
-  //       if (this.state.today[i].yes.indexOf(this.state.today[j].id) === -1) {
-  //         this.state.today[i].yes.push(this.state.today[j].id)
-  //         this.state.today[j].yes.push(this.state.today[i].id)
-  //         updatedYesArrays.push(this.state.today[i], this.state.today[j])
-  //         pairs.push([this.state.today[i].name, this.state.today[j].name])
-  //         this.state.today.splice(i, 1)
-  //         this.state.today.splice(j - 1, 1)
-  //         i--
-  //         break;
-  //       }
-  //     }
-  //   }
-  //   if (this.state.today.length !== 0) {
-  //     for (let i = 0; i < this.state.today.length; i++) {
-  //       if (this.state.today.length % 2 === 0) {
-  //         pairs.push([this.state.today[i].name, this.state.today[i + 1].name])
-  //         updatedYesArrays.push(this.state.today[i], this.state.today[i + 1])
-  //         this.state.today.splice(i, 2)
-  //         i--
-  //       } else {
-  //         this.state.today.push({ id: 1337, name: 'Mentors' })
-  //         i--
-  //       }
-  //     }
-  //   }
-  //   console.log(updatedYesArrays)
-  //   this.setState({ pairs })
-  //   axios.put('/api/updateyes', { student: updatedYesArrays })
-  // }
-
-
+  
   render() {
     let mappedStudents = this.state.today.map(x => {
       return <div key={x.id + 'Hey there'} className='center studentsToday'>
